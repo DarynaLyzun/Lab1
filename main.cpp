@@ -31,9 +31,7 @@ int main()
             else if(c == ',')
                 comma++;
             else if (comma > 0)
-                line_buffer += c;
-            
-                
+                line_buffer += c;  
         }
 
         lines.push_back(line_buffer);
@@ -57,9 +55,7 @@ int main()
             quants.push_back(quant);
         }
 
-        int sum = add(prices, quants);
-
-        out(sum);
+        out(prices, quants);
         
         fclose(input_file);
     }

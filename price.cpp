@@ -5,33 +5,49 @@
 #include "price.hpp"
 using namespace std;
 
-int add(std::vector<Price> prices, std::vector<int> quants)
+Price add(std::vector<Price> prices, std::vector<int> quants)
 {
-    int sum = 0;
+    Price sum;
+    sum.uah = 0;
+    sum.kop = 0;
     int i = 0;
     for (Price price : prices)
     {
-        sum += mult(prices[i], quants[i]);
+        sum.uah += mult(prices[i], quants[i]).uah;
+        sum.kop += mult(prices[i], quants[i]).kop;
         i++;
+
     }
+
+    sum.uah += sum.kop / 100;
+    sum.kop %= 100;
         
     return sum;
 }
 
-int mult(Price price, int quant)
+Price mult(Price price, int quant)
 {
-    return (price.uah * 100 + price.kop) * quant;
+    Price result;
+    result.uah = price.uah * quant;
+    result.kop = price.kop * quant;
+    result.uah += result.kop / 100;
+    result.kop %= 100;
+    return result;
 }
 
-int roun(int sum)
+Price roundto10(Price sum)
 {
-    if (sum % 10 >= 5)
-        return sum - sum % 10 + 10;
+    if (sum.kop % 10 >= 5)
+        sum.kop -= sum.kop % 10 - 10;
     else
-        return sum - sum % 10;
+        sum.kop -= sum.kop % 10;
+    sum.uah += sum.kop / 100;
+    sum.kop %= 100;
+    return sum;
 }
 
-void out(int sum)
+void out(std::vector<Price> prices, std::vector<int> quants)
 {
-    printf("Сума : %.2f\nДо оплати: %.1f\n", (float)sum / 100, (float)roun(sum) / 100);
+    Price sum = add(prices, quants);
+    printf("Сума: %d.%d\nДо оплати: %d.%d\n", sum.uah, sum.kop, roundto10(sum).uah, roundto10(sum).kop);
 }

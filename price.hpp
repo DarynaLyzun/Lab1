@@ -7,7 +7,7 @@ struct Price
     short int kop;
 };
 
-int add(std::vector<Price> prices, std::vector<int> quants);
-int mult(Price prod, int quant);
-int roun(int sum);
-void out(int sum);
+Price add(std::vector<Price> prices, std::vector<int> quants);
+Price mult(Price prod, int quant);
+Price roundto10(Price sum);
+void out(std::vector<Price> prices, std::vector<int> quants);
