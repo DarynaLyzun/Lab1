@@ -1,27 +1,16 @@
-#include <string>
-#include <cmath>
-#include <iostream>
-#include <vector>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
 #include "price.hpp"
 using namespace std;
 
-Price add(std::vector<Price> prices, std::vector<int> quants)
+Price add(Price sum, Price price, int qnt)
 {
-    Price sum;
-    sum.uah = 0;
-    sum.kop = 0;
-    int i = 0;
-    for (Price price : prices)
-    {
-        sum.uah += mult(prices[i], quants[i]).uah;
-        sum.kop += mult(prices[i], quants[i]).kop;
-        i++;
-
-    }
-
+    price = mult(price, qnt);
+    sum.uah += price.uah;
+    sum.kop += price.kop;
     sum.uah += sum.kop / 100;
     sum.kop %= 100;
-        
     return sum;
 }
 
@@ -46,8 +35,29 @@ Price roundto10(Price sum)
     return sum;
 }
 
-void out(std::vector<Price> prices, std::vector<int> quants)
+void out(Price sum)
 {
-    Price sum = add(prices, quants);
     printf("Сума: %d.%d\nДо оплати: %d.%d\n", sum.uah, sum.kop, roundto10(sum).uah, roundto10(sum).kop);
+}
+
+void parseFile(const char*)
+{
+    FILE* input_file;
+    errno_t err;
+    char c;
+    
+    if ((err = fopen_s(&input_file, "input.txt", "r")) != 0) 
+        fprintf(stderr, "cannot open file '%s': %s\n", "input.txt", strerror(err));
+    else 
+    {
+        Price sum = {};
+        Price price = {};
+        int qnt = 0;
+        while(fscanf(input_file, "%*[^,], %d %*[грн] %d %*[коп,] %d", &price.uah, &price.kop, &qnt) == 3)
+        {
+            sum = add(sum, price, qnt);
+        }
+        out(sum);     
+        fclose(input_file);
+    }
 }

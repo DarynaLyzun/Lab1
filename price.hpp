@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 
 struct Price
 {
@@ -7,7 +6,9 @@ struct Price
     short int kop;
 };
 
-Price add(std::vector<Price> prices, std::vector<int> quants);
+Price add(Price sum, Price price, int qnt);
 Price mult(Price prod, int quant);
 Price roundto10(Price sum);
-void out(std::vector<Price> prices, std::vector<int> quants);
+void out(Price sum);
+
+void parseFile(const char*);
