@@ -6,9 +6,9 @@ struct Price
     short int kop;
 };
 
-Price add(Price sum, Price price, int qnt);
-Price mult(Price prod, int quant);
-Price roundto10(Price sum);
+void add(Price &sum, Price price, int qnt);
+void mult(Price &prod, int quant);
+void roundto10(Price &sum);
 void out(Price sum);
 
 void parseFile(const char*);

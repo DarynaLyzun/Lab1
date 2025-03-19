@@ -4,27 +4,24 @@
 #include "price.hpp"
 using namespace std;
 
-Price add(Price sum, Price price, int qnt)
+void add(Price &sum, Price price, int qnt)
 {
-    price = mult(price, qnt);
+    mult(price, qnt);
     sum.uah += price.uah;
     sum.kop += price.kop;
     sum.uah += sum.kop / 100;
     sum.kop %= 100;
-    return sum;
 }
 
-Price mult(Price price, int quant)
+void mult(Price &price, int quant)
 {
-    Price result;
-    result.uah = price.uah * quant;
-    result.kop = price.kop * quant;
-    result.uah += result.kop / 100;
-    result.kop %= 100;
-    return result;
+    price.uah = price.uah * quant;
+    price.kop = price.kop * quant;
+    price.uah += price.kop / 100;
+    price.kop %= 100;
 }
 
-Price roundto10(Price sum)
+void roundto10(Price &sum)
 {
     if (sum.kop % 10 >= 5)
         sum.kop -= sum.kop % 10 - 10;
@@ -32,12 +29,13 @@ Price roundto10(Price sum)
         sum.kop -= sum.kop % 10;
     sum.uah += sum.kop / 100;
     sum.kop %= 100;
-    return sum;
 }
 
 void out(Price sum)
 {
-    printf("Сума: %d.%d\nДо оплати: %d.%d\n", sum.uah, sum.kop, roundto10(sum).uah, roundto10(sum).kop);
+    printf("Сума: %d.%d\n", sum.uah, sum.kop);
+    roundto10(sum);
+    printf("До оплати: %d.%d\n", sum.uah, sum.kop);
 }
 
 void parseFile(const char*)
@@ -55,7 +53,7 @@ void parseFile(const char*)
         int qnt = 0;
         while(fscanf(input_file, "%*[^,], %d %*[грн] %d %*[коп,] %d", &price.uah, &price.kop, &qnt) == 3)
         {
-            sum = add(sum, price, qnt);
+            add(sum, price, qnt);
         }
         out(sum);     
         fclose(input_file);
